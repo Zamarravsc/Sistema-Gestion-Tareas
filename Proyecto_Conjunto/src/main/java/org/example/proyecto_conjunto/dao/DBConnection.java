@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBConnection {
-    private static final String URL = "jdbc:mysql://localhost:3306/task_manager_db";
+    private static final String URL = "jdbc:mysql://localhost:3306/GestionTareas";
     private static final String USER = "root";
     private static final String PASSWORD = ""; // Ajustar según configuración local
 

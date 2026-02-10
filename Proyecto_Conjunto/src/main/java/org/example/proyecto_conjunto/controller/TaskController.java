@@ -7,10 +7,13 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.example.proyecto_conjunto.model.Tarea;
+import org.example.proyecto_conjunto.model.Proyecto;
 import org.example.proyecto_conjunto.dao.TareaDAO;
+import org.example.proyecto_conjunto.dao.ProyectoDAO;
 
 import java.time.LocalDate;
 import java.sql.Date;
+import java.util.List;
 
 public class TaskController {
     @FXML
@@ -34,6 +37,7 @@ public class TaskController {
     private ObservableList<Tarea> tareas = FXCollections.observableArrayList();
 
     private TareaDAO tareaDAO = new TareaDAO();
+    private ProyectoDAO proyectoDAO = new ProyectoDAO();
 
     @FXML
     public void initialize() {
@@ -43,6 +47,30 @@ public class TaskController {
         fechaCol.setCellValueFactory(new PropertyValueFactory<>("fechaLimite"));
 
         tareasTableView.setItems(tareas);
+
+        // Cargar tareas desde la base de datos para el primer proyecto disponible
+        int proyectoId = proyectoDAO.getPrimerProyectoId();
+        if (proyectoId == -1) {
+            // Si no hay proyectos, creamos uno por defecto para pruebas (usuario_id = 1)
+            Proyecto proyectoDef = new Proyecto(1, "Proyecto por defecto", "Creado automáticamente para pruebas");
+            int nuevoId = proyectoDAO.insertarProyectoConId(proyectoDef);
+            if (nuevoId != -1) {
+                proyectoId = nuevoId;
+            } else {
+                // Si no podemos crear un proyecto, no hay tareas que cargar
+                System.out.println("No se pudo obtener ni crear un proyecto. No se cargarán tareas.");
+                return;
+            }
+        }
+
+        try {
+            List<Tarea> desdeDb = tareaDAO.getTareasByProject(proyectoId);
+            if (desdeDb != null && !desdeDb.isEmpty()) {
+                tareas.addAll(desdeDb);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -61,8 +89,22 @@ public class TaskController {
             fechaSql = Date.valueOf(localDate);
         }
 
-        // Crear tarea con proyectoId 0 (ajustar si tienes proyectos)
-        Tarea tarea = new Tarea(0, titulo, "Pendiente", fechaSql);
+        // Obtener un proyecto válido
+        int proyectoId = proyectoDAO.getPrimerProyectoId();
+        if (proyectoId == -1) {
+            // No hay proyectos: crear uno por defecto (usuario_id = 1)
+            Proyecto proyectoDef = new Proyecto(1, "Proyecto por defecto", "Creado automáticamente para pruebas");
+            int nuevoId = proyectoDAO.insertarProyectoConId(proyectoDef);
+            if (nuevoId == -1) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "No se pudo crear un proyecto por defecto.", ButtonType.OK);
+                alert.showAndWait();
+                return;
+            }
+            proyectoId = nuevoId;
+        }
+
+        // Crear tarea con proyectoId obtenido
+        Tarea tarea = new Tarea(proyectoId, titulo, "Pendiente", fechaSql);
 
         boolean ok = tareaDAO.insertTarea(tarea);
         if (ok) {
