@@ -23,7 +23,7 @@
             <Label text="Nueva Tarea" style="-fx-font-weight: bold;" />
             <TextField fx:id="tituloTareaField" promptText="Título de la tarea" />
             <DatePicker fx:id="fechaLimitePicker" promptText="Fecha límite" maxWidth="Infinity" />
-            <Button onAction="#handleAddTask" text="Añadir Tarea" maxWidth="Infinity" />
+            <Button onAction="#agregarTarea" text="Añadir Tarea" maxWidth="Infinity" />
         </VBox>
 
         <VBox spacing="10.0" HBox.hgrow="ALWAYS">
