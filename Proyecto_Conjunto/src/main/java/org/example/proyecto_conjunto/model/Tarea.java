@@ -1,38 +1,51 @@
 package org.example.proyecto_conjunto.model;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Tarea {
-    private int id_tarea;
-    private String nombre_tarea;
-    private String descripcion;
-    private Date fecha_tarea;
+    private int id;
+    private int proyectoId;
+    private String titulo;
     private String estado;
-    private int id_proyecto;
+    private Date fechaLimite;
 
-    public Tarea(int id_tarea, String nombre_tarea, String descripcion, String estado, Date fecha_tarea, int id_proyecto) {
-        this.id_tarea = id_tarea;
-        this.nombre_tarea = nombre_tarea;
-        this.descripcion = descripcion;
+    public Tarea(int id, int proyectoId, String titulo, String estado, Date fechaLimite) {
+        this.id = id;
+        this.proyectoId = proyectoId;
+        this.titulo = titulo;
         this.estado = estado;
-        this.fecha_tarea = fecha_tarea;
-        this.id_proyecto = id_proyecto;
+        this.fechaLimite = fechaLimite;
     }
 
-    public int getId_tarea() {
-        return id_tarea;
+    public Tarea(int proyectoId, String titulo, String estado, Date fechaLimite) {
+        this.proyectoId = proyectoId;
+        this.titulo = titulo;
+        this.estado = estado;
+        this.fechaLimite = fechaLimite;
     }
 
-    public void setId_tarea(int id_tarea) {
-        this.id_tarea = id_tarea;
+    public int getId() {
+        return id;
     }
 
-    public int getId_proyecto() {
-        return id_proyecto;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setId_proyecto(int id_proyecto) {
-        this.id_proyecto = id_proyecto;
+    public int getProyectoId() {
+        return proyectoId;
+    }
+
+    public void setProyectoId(int proyectoId) {
+        this.proyectoId = proyectoId;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
     }
 
     public String getEstado() {
@@ -43,27 +56,11 @@ public class Tarea {
         this.estado = estado;
     }
 
-    public Date getFecha_tarea() {
-        return fecha_tarea;
+    public Date getFechaLimite() {
+        return fechaLimite;
     }
 
-    public void setFecha_tarea(Date fecha_tarea) {
-        this.fecha_tarea = fecha_tarea;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public String getNombre_tarea() {
-        return nombre_tarea;
-    }
-
-    public void setNombre_tarea(String nombre_tarea) {
-        this.nombre_tarea = nombre_tarea;
+    public void setFechaLimite(Date fechaLimite) {
+        this.fechaLimite = fechaLimite;
     }
 }
