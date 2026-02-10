@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.example.proyecto_conjunto.model.Tarea;
+import org.example.proyecto_conjunto.dao.TareaDAO;
 
 import java.time.LocalDate;
 import java.sql.Date;
@@ -31,6 +32,8 @@ public class TaskController {
     private TableColumn<Tarea, Date> fechaCol;
 
     private ObservableList<Tarea> tareas = FXCollections.observableArrayList();
+
+    private TareaDAO tareaDAO = new TareaDAO();
 
     @FXML
     public void initialize() {
@@ -58,12 +61,21 @@ public class TaskController {
             fechaSql = Date.valueOf(localDate);
         }
 
-        // Usamos el constructor que recibe (proyectoId, titulo, estado, fechaLimite)
+        // Crear tarea con proyectoId 0 (ajustar si tienes proyectos)
         Tarea tarea = new Tarea(0, titulo, "Pendiente", fechaSql);
-        tareas.add(tarea);
 
-        // Limpia los campos de entrada
-        tituloTareaField.clear();
-        fechaLimitePicker.setValue(null);
+        boolean ok = tareaDAO.insertTarea(tarea);
+        if (ok) {
+            tareas.add(tarea);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Tarea guardada correctamente.", ButtonType.OK);
+            alert.showAndWait();
+
+            // Limpia los campos de entrada
+            tituloTareaField.clear();
+            fechaLimitePicker.setValue(null);
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error al guardar la tarea en la base de datos.", ButtonType.OK);
+            alert.showAndWait();
+        }
     }
 }
